@@ -1,0 +1,42 @@
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# IntelliJ config files (from your image)
+jarRepositories.xml
+encodings.xml
+compiler.xml
+checkstyle-idea.xml
+misc.xml
+workspace.xml
+
+# --- Build Tools ---
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle (if ever switched)
+.gradle/
+build/
+
+# --- Maven Wrapper ---
+.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+
+# --- Local Dev Files ---
+HELP.md          # (from your image)
+*.log            # Log files
+*.bak            # Backup files
+
+# --- Environment ---
+.env             # Environment variables
+*.properties     # Local config overrides (e.g., application-dev.properties)
