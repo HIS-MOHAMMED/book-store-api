@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -22,14 +23,15 @@ public class BookService {
     public Book getBookByTitle(String book_title){
         return bookRepository.findByTitle(book_title).orElseThrow(() -> new RuntimeException("book not found"));
     }
-    //    public void deleteBookByTitle(String book_title){
-//        Optional<Book> book = bookRepository.findByTitle(book_title);
-//        if(book.isPresent()){
-//            bookRepository.delete(book);
-//        }else{
-//            throw new RuntimeException("book doesn't exists");
-//        }
-//    }
+    public void deleteBookByTitle(String book_title){
+        Optional<Book> optionalBook = bookRepository.findByTitle(book_title);
+        if(optionalBook.isEmpty()){
+            throw new RuntimeException("book doesn't exists");
+        }
+        else{
+            bookRepository.delete(optionalBook.get());
+        }
+    }
     public List<Book> getBooks(){
         return bookRepository.findAll();
     }
