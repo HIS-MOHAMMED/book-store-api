@@ -3,7 +3,6 @@ package com.hishamfactory.book_store_api.service;
 import com.hishamfactory.book_store_api.entity.Category;
 import com.hishamfactory.book_store_api.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +14,21 @@ public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
-    public void addCategory(Category category){
+    public Category addCategory(Category category){
         if(categoryRepository.findByName(category.getName()).isPresent()){
             throw new RuntimeException("this category already exists");
         }
-        categoryRepository.save(category);
+        return categoryRepository.save(category);
     }
     public List<Category> getCategories(){
         return categoryRepository.findAll();
     }
     public Category getCategoryByName(String category_name){
         return categoryRepository.findByName(category_name).orElseThrow(() -> new RuntimeException("book not found"));
+    }
+
+    public Category getCategoryByID(Long category_id){
+        return categoryRepository.findById(category_id).orElseThrow(() -> new RuntimeException("book not found"));
     }
     @Transactional
     public void deleteCategoryByName(String category_name){
@@ -38,5 +41,17 @@ public class CategoryService {
             throw new RuntimeException("can't delete this category because it's still contains books.");
         }
         categoryRepository.delete(category);
+    }
+
+    public Category updateCategory(Long existing_category_id, Category updated_category){
+        Category updatedCategory = categoryRepository.findById(existing_category_id).orElseThrow(() -> new RuntimeException("Category not foudn"));
+        if(updated_category.getName() != null){
+            updatedCategory.setName(updated_category.getName());
+
+        }else if(updated_category.getDescription() != null){
+            updatedCategory.setDescription(updated_category.getDescription());
+
+        }
+        return categoryRepository.save(updatedCategory);
     }
 }
