@@ -47,7 +47,10 @@ public class BookService {
             throw new RuntimeException("book doesn't exists");
         }
         else{
-            bookRepository.delete(optionalBook.get());
+            Book book = optionalBook.get();
+            Category category = categoryRepository.findById(book.getCategory().getId()).get();
+            category.getBooks().remove(book);
+            bookRepository.delete(book);
         }
     }
     public void deleteBookByID(Long id){
