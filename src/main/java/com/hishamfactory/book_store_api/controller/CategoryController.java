@@ -33,20 +33,15 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/getCategoryByID/{id}")
+    @GetMapping("/getCategoryByID/{category_id}")
     public ResponseEntity<Category> getCategoryByID(@PathVariable Long category_id){
         Category category = categoryService.getCategoryByID(category_id);
         return ResponseEntity.ok(category);
     }
 
     @PutMapping("/updateCategory/{category_id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long category_id, @RequestBody Category category){
-        Category existingCategory = categoryService.getCategoryByID(category_id);
-        existingCategory.setName(category.getName());
-        existingCategory.setDescription(category.getDescription());
-        existingCategory.setBooks(category.getBooks());
-
-        Category updatedCategory = categoryService.updateCategory(category_id,existingCategory);
+    public ResponseEntity<Category> updateCategory(@PathVariable Long category_id, @RequestBody Category updated_category){
+        Category updatedCategory = categoryService.updateCategory(category_id, updated_category);
         return ResponseEntity.ok(updatedCategory);
     }
     @DeleteMapping("/deleteCategory/{category_id}")

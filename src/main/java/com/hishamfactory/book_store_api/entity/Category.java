@@ -23,6 +23,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
+    @JsonManagedReference
     private List<Book> books;
 
     public Long getId() {

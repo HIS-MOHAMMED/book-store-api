@@ -26,6 +26,7 @@ public class Book {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private Category category;
 
     public Long getId() {

@@ -44,14 +44,9 @@ public class CategoryService {
     }
 
     public Category updateCategory(Long existing_category_id, Category updated_category){
-        Category updatedCategory = categoryRepository.findById(existing_category_id).orElseThrow(() -> new RuntimeException("Category not foudn"));
-        if(updated_category.getName() != null){
+        Category updatedCategory = categoryRepository.findById(existing_category_id).orElseThrow(() -> new RuntimeException("category not found"));
             updatedCategory.setName(updated_category.getName());
-
-        }else if(updated_category.getDescription() != null){
             updatedCategory.setDescription(updated_category.getDescription());
-
-        }
-        return categoryRepository.save(updatedCategory);
+            return categoryRepository.save(updatedCategory);
     }
 }

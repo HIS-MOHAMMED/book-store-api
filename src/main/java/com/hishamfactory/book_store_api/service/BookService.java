@@ -1,7 +1,9 @@
 package com.hishamfactory.book_store_api.service;
 
 import com.hishamfactory.book_store_api.entity.Book;
+import com.hishamfactory.book_store_api.entity.Category;
 import com.hishamfactory.book_store_api.repository.BookRepository;
+import com.hishamfactory.book_store_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public Book addBook(Book book){
         if(bookRepository.findByTitle(book.getTitle()).isPresent()){
@@ -27,21 +32,14 @@ public class BookService {
         return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("book not found"));
     }
 
-    public Book updateBook(Long existing_book_id, Book updated_book){
-        Book existingBook = bookRepository.findById(existing_book_id).get();
-        if(updated_book.getTitle() != null){
+    public Book updateBook(Long book_id , Book updated_book){
+        Book existingBook = bookRepository.findById(book_id).orElseThrow(()-> new RuntimeException("book not found."));
             existingBook.setTitle(updated_book.getTitle());
-        }
-        else if(updated_book.getAuthor() != null){
             existingBook.setAuthor(updated_book.getAuthor());
-
-        }else if(updated_book.getPrice() != 0){
             existingBook.setPrice(updated_book.getPrice());
-
-        }else if( updated_book.getCategory() != null){
-            existingBook.setCategory(updated_book.getCategory());
-        }
-        return bookRepository.save(existingBook);
+            Category category = categoryRepository.findById(updated_book.getCategory().getId()).orElseThrow(()-> new RuntimeException("category not found"));
+            existingBook.setCategory(category);
+            return bookRepository.save(existingBook);
     }
     public void deleteBookByTitle(String book_title){
         Optional<Book> optionalBook = bookRepository.findByTitle(book_title);
