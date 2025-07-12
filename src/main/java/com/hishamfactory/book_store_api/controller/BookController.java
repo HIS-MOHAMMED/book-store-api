@@ -6,6 +6,7 @@ import com.hishamfactory.book_store_api.entity.Category;
 import com.hishamfactory.book_store_api.service.BookService;
 import com.hishamfactory.book_store_api.service.CategoryService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,20 +30,11 @@ public class BookController {
     }
 
     @PostMapping("/addBook")
-    public ResponseEntity<?> addBook(@RequestBody Book book){
-        try{
-            Long category_id = book.getCategory().getId();
-            if(category_id == null){
-                return ResponseEntity.status(401).build();
-            }
-            Category category = categoryService.getCategoryByID(category_id);
+    public ResponseEntity<?> addBook(@Valid @RequestBody Book book){
+            Category category = categoryService.getCategoryByID(book.getCategory().getId());
             book.setCategory(category);
-
             Book addedBook = bookService.addBook(book);
             return ResponseEntity.ok(addedBook);
-        }catch (RuntimeException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @GetMapping("/getBookByID/{book_id}")
