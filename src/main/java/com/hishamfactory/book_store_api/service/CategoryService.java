@@ -1,6 +1,7 @@
 package com.hishamfactory.book_store_api.service;
 
 import com.hishamfactory.book_store_api.entity.Category;
+import com.hishamfactory.book_store_api.excption.CategoryNotFoundException;
 import com.hishamfactory.book_store_api.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
     public Category addCategory(Category category){
         if(categoryRepository.findByName(category.getName()).isPresent()){
-            throw new RuntimeException("this category already exists");
+            throw new CategoryNotFoundException("category not found");
         }
         return categoryRepository.save(category);
     }
@@ -24,17 +25,17 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
     public Category getCategoryByName(String category_name){
-        return categoryRepository.findByName(category_name).orElseThrow(() -> new RuntimeException("book not found"));
+        return categoryRepository.findByName(category_name).orElseThrow(() -> new CategoryNotFoundException("category not found"));
     }
 
     public Category getCategoryByID(Long category_id){
-        return categoryRepository.findById(category_id).orElseThrow(() -> new RuntimeException("book not found"));
+        return categoryRepository.findById(category_id).orElseThrow(() -> new CategoryNotFoundException("category not found"));
     }
     @Transactional
     public void deleteCategoryByName(String category_name){
         Optional<Category> optionalCategory = categoryRepository.findByName(category_name);
         if(optionalCategory.isEmpty()){
-            throw new RuntimeException("this category doesn't exists.");
+            throw new CategoryNotFoundException("category not found");
         }
         Category category = optionalCategory.get();
         if(category.getBooks() != null && !category.getBooks().isEmpty()){

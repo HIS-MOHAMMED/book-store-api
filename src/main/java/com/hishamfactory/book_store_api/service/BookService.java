@@ -2,6 +2,7 @@ package com.hishamfactory.book_store_api.service;
 
 import com.hishamfactory.book_store_api.entity.Book;
 import com.hishamfactory.book_store_api.entity.Category;
+import com.hishamfactory.book_store_api.excption.BookNotFoundException;
 import com.hishamfactory.book_store_api.repository.BookRepository;
 import com.hishamfactory.book_store_api.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,14 @@ public class BookService {
         return bookRepository.save(book);
     }
     public Book getBookByTitle(String book_title){
-        return bookRepository.findByTitle(book_title).orElseThrow(() -> new RuntimeException("book not found"));
+        return bookRepository.findByTitle(book_title).orElseThrow(() -> new BookNotFoundException("book not found"));
     }
     public Book getBookByID(Long id){
-        return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("book not found"));
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("book not found"));
     }
 
     public Book updateBook(Long book_id , Book updated_book){
-        Book existingBook = bookRepository.findById(book_id).orElseThrow(()-> new RuntimeException("book not found."));
+        Book existingBook = bookRepository.findById(book_id).orElseThrow(()-> new BookNotFoundException("book not found."));
             existingBook.setTitle(updated_book.getTitle());
             existingBook.setAuthor(updated_book.getAuthor());
             existingBook.setPrice(updated_book.getPrice());
@@ -44,7 +45,7 @@ public class BookService {
     public void deleteBookByTitle(String book_title){
         Optional<Book> optionalBook = bookRepository.findByTitle(book_title);
         if(optionalBook.isEmpty()){
-            throw new RuntimeException("book doesn't exists");
+            throw new BookNotFoundException("book not found");
         }
         else{
             Book book = optionalBook.get();
@@ -56,7 +57,7 @@ public class BookService {
     public void deleteBookByID(Long id){
         Optional<Book> optionalBook = bookRepository.findById(id);
         if(optionalBook.isEmpty()){
-            throw new RuntimeException("book doesn't exists");
+            throw new BookNotFoundException("book not found");
         }
         else{
             bookRepository.delete(optionalBook.get());
